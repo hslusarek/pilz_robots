@@ -112,6 +112,8 @@ protected:
 
   void triggerMovementToHoldPosition();
 
+  void trajectoryCommandCB(const JointTrajectoryConstPtr& msg) override;
+
 private:
   ros::ServiceServer hold_position_service;
   ros::ServiceServer unhold_position_service;

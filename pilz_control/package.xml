@@ -32,6 +32,7 @@
 
   <test_depend>rostest</test_depend>
   <test_depend>code_coverage</test_depend>
+  <test_depend>pilz_testutils</test_depend>
 
   <export>
     <controller_interface plugin="${prefix}/pilz_control_plugins.xml"/>

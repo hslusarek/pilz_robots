@@ -77,11 +77,16 @@ if(CATKIN_ENABLE_TESTING)
   endif()
 
 
-  add_rostest_gtest(unittest_pilz_joint_trajectory_controller
+  find_package(pilz_testutils REQUIRED)
+
+  include_directories(${pilz_testutils_INCLUDE_DIRS})
+
+
+  add_rostest_gmock(unittest_pilz_joint_trajectory_controller
     test/unittest_pilz_joint_trajectory_controller.test
     test/unittest_pilz_joint_trajectory_controller.cpp
   )
-  target_link_libraries(unittest_pilz_joint_trajectory_controller ${catkin_LIBRARIES})
+  target_link_libraries(unittest_pilz_joint_trajectory_controller ${catkin_LIBRARIES} ${pilz_testutils_LIBRARIES})
 
   add_rostest(test/integrationtest_pilz_joint_trajectory_controller.test DEPENDENCIES ${PROJECT_NAME} robot_mock)
   add_executable(robot_mock test/robot_mock.cpp)
