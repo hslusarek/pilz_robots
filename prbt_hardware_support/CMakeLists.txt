@@ -491,6 +491,14 @@ if(CATKIN_ENABLE_TESTING)
   add_dependencies(unittest_modbus_msg_in_builder ${${PROJECT_NAME}_EXPORTED_TARGETS})
   #----------------------------------------
 
+  #--- BenchmarkDummyTest unit test ---
+  find_package(benchmark REQUIRED)
+  catkin_add_gtest(unittest_benchmark_dummy
+      test/unit_tests/unittest_benchmark_dummy.cpp
+  )
+  target_link_libraries(unittest_benchmark_dummy benchmark::benchmark)
+  #----------------------------------------
+
   #--- OperationModeSetupExecutor unit test ---
   catkin_add_gmock(unittest_operation_mode_setup_executor
       test/unit_tests/unittest_operation_mode_setup_executor.cpp
