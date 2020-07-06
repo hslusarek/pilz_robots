@@ -15,33 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+
 #include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
 #include <prbt_hardware_support/benchmark_dummy_test.h>
 
 using namespace prbt_hardware_support;
-
-//class MyBenchmarkFixture : public ::benchmark::Fixture
-//{
-// public:
-//  void SetUp(const ::benchmark::State& state)
-//  {
-//    // Do something
-//  }
-
-//  void TearDown(const ::benchmark::State& state)
-//  {
-//    // Do something
-//  }
-//}
-
-//BENCHMARK_F(MyBenchmarkFixture, testBenchmarkDummyFunc)(benchmark::State &st)
-//{
-//  myFuncToBenchmark();
-//}
-
-//BENCHMARK_MAIN();
 
 void BM_BenchmarkMyFuncToBenchmark(benchmark::State& state)
 {
