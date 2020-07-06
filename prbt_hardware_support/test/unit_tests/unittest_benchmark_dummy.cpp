@@ -24,6 +24,34 @@
 
 using namespace prbt_hardware_support;
 
+/**
+ * @brief Stores the results from the benchmark tests allowing for a
+ * programmatic evaluation of the results.
+ */
+class StoreResultsReporter : public benchmark::ConsoleReporter
+{
+ public:
+  virtual void ReportRuns(const std::vector<Run>& report);
+
+public:
+  const std::vector<Run>& getResults();
+
+private:
+  std::vector<Run> benchmark_results_;
+};
+
+void StoreResultsReporter::ReportRuns(const std::vector<Run>& report)
+{
+  benchmark_results_.insert(benchmark_results_.end(), begin(report), end(report));
+  // Call base class to still show results on console
+  ConsoleReporter::ReportRuns(report);
+}
+
+const std::vector<benchmark::BenchmarkReporter::Run>& StoreResultsReporter::getResults()
+{
+  return benchmark_results_;
+}
+
 void BM_BenchmarkMyFuncToBenchmark(benchmark::State& state)
 {
   for (auto _ : state)
@@ -34,9 +62,25 @@ void BM_BenchmarkMyFuncToBenchmark(benchmark::State& state)
 
 BENCHMARK(BM_BenchmarkMyFuncToBenchmark);
 
-TEST(MyTest, testMyFunc)
+/**
+ * @brief Runs the benchmark tests and programmatically evaluates that the execution time does not exceed a certain
+ * value via gtest macros.
+ */
+TEST(MyTest, runAndCheckBenchmarks)
 {
-  EXPECT_TRUE(myFuncToBenchmark());
+  StoreResultsReporter reporter;
+
+  // Run benchmark tests and use specialized reporter to store the benchmark results for programmatic evaluation
+  // via gtest macros.
+  benchmark::RunSpecifiedBenchmarks(&reporter);
+
+  for (auto const& run : reporter.getResults())
+  {
+    if (run.benchmark_name() == "BM_BenchmarkMyFuncToBenchmark")
+    {
+      EXPECT_LE(run.GetAdjustedCPUTime(), 400.0) << "Execution time exceeded expectation.";
+    }
+  }
 }
 
 int main(int argc, char* argv[])
@@ -44,15 +88,6 @@ int main(int argc, char* argv[])
   testing::InitGoogleTest(&argc, argv);
   benchmark::Initialize(&argc, argv);
 
-  // Run gtests
-  int result = RUN_ALL_TESTS();
-
-  if (result == 0)
-  {
-    std::cout << "\nRunning benchmarks:\n";
-    benchmark::RunSpecifiedBenchmarks();
-  }
-
-  return result;
+  return RUN_ALL_TESTS();
 }
 
